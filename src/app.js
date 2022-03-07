@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const rateLimit = require('express-rate-limit')
 
 require('dotenv').config();
 
@@ -14,7 +15,16 @@ mongoose.connect(process.env.MONGODB_URL,
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
-app.use(express.json());
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  message: 'Trop de requête envoyé, veuillez attendre quelques minutes.',
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+app.use(express.json(), limiter);
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
