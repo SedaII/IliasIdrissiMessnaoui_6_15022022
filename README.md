@@ -17,3 +17,7 @@ Use `nodemon` to launch server.
 ## Setup environment
 
 Duplicate `.env-template` file, rename it `.env` and complete variables.
+
+## Environnement de démo
+
+https://sedaii.github.io/piiquante-front/.
